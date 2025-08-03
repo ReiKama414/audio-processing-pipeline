@@ -1,0 +1,6 @@
+librosa
+noisereduce
+soundfile
+pydub
+demucs
+streamlit
