@@ -35,9 +35,21 @@ def process_vocal(input_path):
 
     return final
 
-def mix_tracks(vocal_path, accompaniment_path, output_path):
+def mix_tracks(vocal_path, accompaniment_path, output_path, vocal_db=-6, accomp_db=-2):
     vocal = AudioSegment.from_file(vocal_path)
     accomp = AudioSegment.from_file(accompaniment_path)
+
+    # 補齊短音軌（使長度一致）
+    if len(vocal) > len(accomp):
+        accomp += AudioSegment.silent(duration=len(vocal) - len(accomp))
+    elif len(accomp) > len(vocal):
+        vocal += AudioSegment.silent(duration=len(accomp) - len(vocal))
+
+    # 音量調整
+    vocal = vocal + vocal_db
+    accomp = accomp + accomp_db
+
+    # 合併
     mix = accomp.overlay(vocal)
     mix.export(output_path, format="wav")
 
